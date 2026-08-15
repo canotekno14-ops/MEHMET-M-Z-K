@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { Language, MainSection, TheorySubSection } from './types';
-import { Header } from './components/Header';
-import { QuickToolsModal } from './components/QuickToolsModal';
-import { AcousticsLab } from './components/AcousticsLab';
-import { NotationMaster } from './components/NotationMaster';
-import { SolfegeSightReading } from './components/SolfegeSightReading';
-import { ViolinMasterclass } from './components/ViolinMasterclass';
-import { PianoMasterclass } from './components/PianoMasterclass';
-import { ConservatoryExamPrep } from './components/ConservatoryExamPrep';
-import { InteractiveBlueprints } from './components/InteractiveBlueprints';
-import { AIMusicTutor } from './components/AIMusicTutor';
-import { TRANSLATIONS } from './i18n/translations';
+import Header from './Header';
+import QuickToolsModal from './QuickToolsModal';
+import AcousticsLab from './AcousticsLab';
+import NotationMaster from './NotationMaster';
+import SolfegeSightReading from './SolfegeSightReading';
+import ViolinMasterclass from './ViolinMasterclass';
+import PianoMasterclass from './PianoMasterclass';
+import ConservatoryExamPrep from './ConservatoryExamPrep';
+import InteractiveBlueprints from './InteractiveBlueprints';
+import AIMusicTutor from './AIMusicTutor';
+import { TRANSLATIONS } from './translations';
 import { Waves, Clock, Music, BookOpen, ShieldCheck, Sparkles, Volume2 } from 'lucide-react';
 
 export default function App() {
@@ -151,4 +151,3 @@ export default function App() {
     </div>
   );
 }
-
