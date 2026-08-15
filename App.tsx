@@ -11,7 +11,7 @@ import ConservatoryExamPrep from './ConservatoryExamPrep';
 import InteractiveBlueprints from './InteractiveBlueprints';
 import AIMusicTutor from './AIMusicTutor';
 import { TRANSLATIONS } from './translations';
-import { Waves, Clock, Music, BookOpen, ShieldCheck, Sparkles, Volume2 } from 'lucide-react';
+import { Waves, Clock, Music, Volume2 } from 'lucide-react';
 
 export default function App() {
   const [currentLanguage, setCurrentLanguage] = useState<Language>('tr');
