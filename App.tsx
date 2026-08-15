@@ -29,7 +29,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col font-sans selection:bg-amber-500 selection:text-stone-950">
-      {/* Persistent Navigation Header with Multilingual Switcher & Quick Tools */}
       <Header
         currentLanguage={currentLanguage}
         onLanguageChange={setCurrentLanguage}
@@ -38,12 +37,9 @@ export default function App() {
         onOpenQuickTools={handleOpenQuickTools}
       />
 
-      {/* Main Educational Workspace */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
-        {/* SECTION 1: GLOBAL MUSIC THEORY & SOLFEGE */}
         {activeSection === 'theory' && (
           <div className="space-y-6">
-            {/* Theory Sub-Modules Selector */}
             <div className="flex flex-wrap items-center gap-2 p-1.5 bg-stone-900 rounded-2xl border border-stone-800 w-fit">
               <button
                 id="theory-sub-acoustics-btn"
@@ -85,23 +81,16 @@ export default function App() {
               </button>
             </div>
 
-            {/* Sub-view rendering */}
             {activeTheorySub === 'acoustics' && <AcousticsLab language={currentLanguage} />}
             {activeTheorySub === 'notation' && <NotationMaster language={currentLanguage} />}
             {activeTheorySub === 'solfege' && <SolfegeSightReading language={currentLanguage} />}
           </div>
         )}
 
-        {/* SECTION 2: VIOLIN MASTERCLASS */}
         {activeSection === 'violin' && <ViolinMasterclass language={currentLanguage} />}
-
-        {/* SECTION 3: PIANO MASTERCLASS */}
         {activeSection === 'piano' && <PianoMasterclass language={currentLanguage} />}
-
-        {/* SECTION 4: CONSERVATORY EXAM PREPARATION MODULE */}
         {activeSection === 'conservatory' && <ConservatoryExamPrep language={currentLanguage} />}
 
-        {/* SECTION 5: INTERACTIVE BLUEPRINTS & SIGHT READING GAMES */}
         {activeSection === 'games' && (
           <div className="space-y-6">
             <InteractiveBlueprints language={currentLanguage} />
@@ -109,11 +98,9 @@ export default function App() {
           </div>
         )}
 
-        {/* SECTION 6: AI MAESTRO TUTOR */}
         {activeSection === 'ai_tutor' && <AIMusicTutor language={currentLanguage} />}
       </main>
 
-      {/* Floating Quick Metronome / Tuner Button for Rapid Mobile Access */}
       <div className="fixed bottom-5 right-5 z-30 flex items-center gap-2">
         <button
           onClick={() => handleOpenQuickTools('metronome')}
@@ -124,7 +111,6 @@ export default function App() {
         </button>
       </div>
 
-      {/* Global Quick Tools Modal (Metronome & Diapason Tuner) */}
       <QuickToolsModal
         isOpen={isQuickToolsOpen}
         onClose={() => setIsQuickToolsOpen(false)}
@@ -132,7 +118,6 @@ export default function App() {
         language={currentLanguage}
       />
 
-      {/* Footer */}
       <footer className="mt-12 border-t border-stone-800/80 bg-stone-950 py-6 text-stone-500 text-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
