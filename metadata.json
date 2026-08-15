@@ -1,0 +1,6 @@
+{
+  "name": "MuseAcademy AI",
+  "description": "Multilingual Music Theory, Solfège, Violin and Piano Masterclass platform featuring physics of sound, interactive violin fingerboard, virtual piano, ear training, sight-reading games, and AI music tutor.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
