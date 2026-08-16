@@ -1,4 +1,4 @@
-import { BowingTechnique, ViolinPositionNote } from '../types';
+import { BowingTechnique, ViolinPositionNote } from './types';
 
 export const VIOLIN_LUTHIERS = [
   {
