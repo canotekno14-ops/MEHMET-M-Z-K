@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Language } from '../types';
-import { TRANSLATIONS } from '../i18n/translations';
+import { TRANSLATIONS } from './translations';
 import {
   playAcousticWave,
   playHarmonicsSeries,
