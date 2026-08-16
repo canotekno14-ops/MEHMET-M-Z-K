@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Language, ClefType } from '../types';
+import { Language, ClefType } from './types';
 import { TRANSLATIONS } from './translations';
 import { NOTE_VALUES, TIME_SIGNATURES } from '../data/musicTheoryData';
 import { MusicStaff } from './MusicStaff';
