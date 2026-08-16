@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Language } from '../types';
+import { Language } from './types';
 import { TRANSLATIONS } from './translations';
 import {
   playAcousticWave,
