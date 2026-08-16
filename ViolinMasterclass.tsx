@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Language, ViolinString } from '../types';
-import { TRANSLATIONS } from '../i18n/translations';
+import { TRANSLATIONS } from './translations';
 import {
   VIOLIN_LUTHIERS,
   VIOLIN_ANATOMY,
