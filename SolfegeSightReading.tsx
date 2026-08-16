@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Language, ClefType } from '../types';
+import { Language, ClefType } from './types';
 import { TRANSLATIONS } from './translations';
 import { INTERVALS, SCALES } from '../data/musicTheoryData';
 import { MusicStaff } from './MusicStaff';
