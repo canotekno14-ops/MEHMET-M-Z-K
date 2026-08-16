@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Language } from '../types';
+import { Language } from './types';
 import { TRANSLATIONS } from './translations';
 import { playMetronomeClick, playAcousticWave } from '../audio/synth';
 import { X, Play, Square, Volume2, Timer, RotateCcw } from 'lucide-react';
