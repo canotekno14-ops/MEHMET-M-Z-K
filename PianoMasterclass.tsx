@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Language, PianoKeyData } from '../types';
+import { Language, PianoKeyData } from './types';
 import { TRANSLATIONS } from './translations';
 import { generate88Keys, PIANO_PEDALS, PIANO_ANATOMY, HANON_EXERCISES } from '../data/pianoData';
 import { CHORDS } from '../data/musicTheoryData';
