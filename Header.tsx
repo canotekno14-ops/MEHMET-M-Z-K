@@ -1,6 +1,6 @@
 import React from 'react';
 import { Language, MainSection } from '../types';
-import { LANGUAGES, TRANSLATIONS } from '../i18n/translations';
+import { TRANSLATIONS } from './translations';
 import { Music, Activity, Disc, Sparkles, BookOpen, Volume2, Timer } from 'lucide-react';
 
 interface HeaderProps {
