@@ -1,4 +1,4 @@
-import { PianoKeyData } from '../types';
+import { PianoKeyData } from './types';
 
 export const PIANO_PEDALS = [
   {
