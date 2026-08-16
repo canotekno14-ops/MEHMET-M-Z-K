@@ -1,4 +1,4 @@
-import { Language } from '../types';
+import { Language } from './types';
 
 export const LANGUAGES: { code: Language; label: string; flag: string; notationStyle: string }[] = [
   { code: 'tr', label: 'Türkçe', flag: '🇹🇷', notationStyle: 'Do-Re-Mi (Solfège)' },
