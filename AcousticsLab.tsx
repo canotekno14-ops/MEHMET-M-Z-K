@@ -6,7 +6,7 @@ import {
   playHarmonicsSeries,
   playIntonationComparison,
 } from '../audio/synth';
-import { Play, Square, Activity, Waves, Sliders, Volume2, Info } from 'lucide-react';
+import { Play, Square, Activity, Waves, Sliders, Volume2 } from 'lucide-react';
 
 interface AcousticsLabProps {
   language: Language;
@@ -58,7 +58,6 @@ export const AcousticsLab: React.FC<AcousticsLabProps> = ({ language }) => {
       ctx.strokeStyle = '#292524';
       ctx.lineWidth = 1;
       ctx.beginPath();
-      // Center horizontal line
       ctx.moveTo(0, centerY);
       ctx.lineTo(width, centerY);
       for (let x = 0; x < width; x += 40) {
@@ -84,7 +83,6 @@ export const AcousticsLab: React.FC<AcousticsLabProps> = ({ language }) => {
         let yValue = 0;
 
         if (isPlayingHarmonics) {
-          // Additive harmonic synthesis summation: f(t) = Sum(A_n * sin(n * w * t))
           harmonicGains.forEach((gain, idx) => {
             const n = idx + 1;
             yValue += (gain * 35 * Math.sin(n * normalizedX)) / Math.sqrt(n);
@@ -173,28 +171,27 @@ export const AcousticsLab: React.FC<AcousticsLabProps> = ({ language }) => {
   const handlePlayTuningDemo = (type: 'equal' | 'pure' | 'both') => {
     setIsPlayingTuning(true);
     const rootHz = 261.63; // C4
-    let f2 = 329.63; // Equal 12-TET Major 3rd (E4)
+    let f2 = 329.63;
 
     if (selectedInterval === 'majorThird') {
-      if (type === 'equal') f2 = rootHz * Math.pow(2, 4 / 12); // 329.63 Hz (400 cents)
-      if (type === 'pure') f2 = rootHz * (5 / 4); // 327.04 Hz (386 cents - 5:4 pure ratio)
+      if (type === 'equal') f2 = rootHz * Math.pow(2, 4 / 12);
+      if (type === 'pure') f2 = rootHz * (5 / 4);
       if (type === 'both') {
         playIntonationComparison(rootHz * Math.pow(2, 4 / 12), rootHz * (5 / 4), 4.0);
         setTimeout(() => setIsPlayingTuning(false), 4000);
         return;
       }
     } else if (selectedInterval === 'fifth') {
-      if (type === 'equal') f2 = rootHz * Math.pow(2, 7 / 12); // 391.995 Hz (700 cents)
-      if (type === 'pure') f2 = rootHz * (3 / 2); // 392.445 Hz (702 cents - pure 3:2 fifth)
+      if (type === 'equal') f2 = rootHz * Math.pow(2, 7 / 12);
+      if (type === 'pure') f2 = rootHz * (3 / 2);
       if (type === 'both') {
         playIntonationComparison(rootHz * Math.pow(2, 7 / 12), rootHz * (3 / 2), 4.0);
         setTimeout(() => setIsPlayingTuning(false), 4000);
         return;
       }
     } else if (selectedInterval === 'neutralThird') {
-      // Turkish Makam Segah / Uşşak neutral third (~350 cents)
-      if (type === 'equal') f2 = rootHz * Math.pow(2, 3 / 12); // Minor 3rd (300 cents)
-      if (type === 'pure') f2 = rootHz * Math.pow(2, 3.55 / 12); // Segah koma (~355 cents)
+      if (type === 'equal') f2 = rootHz * Math.pow(2, 3 / 12);
+      if (type === 'pure') f2 = rootHz * Math.pow(2, 3.55 / 12);
       if (type === 'both') {
         playIntonationComparison(rootHz * Math.pow(2, 3 / 12), rootHz * Math.pow(2, 3.55 / 12), 4.0);
         setTimeout(() => setIsPlayingTuning(false), 4000);
@@ -363,7 +360,7 @@ export const AcousticsLab: React.FC<AcousticsLabProps> = ({ language }) => {
                         newGains[idx] = Number(e.target.value);
                         setHarmonicGains(newGains);
                       }}
-                      className="h-28 w-1.5 bg-stone-800 rounded-lg appearance-none cursor-pointer accent-amber-500 orient-vertical"
+                      className="h-28 w-1.5 bg-stone-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
                       style={{ writingMode: 'vertical-lr', direction: 'rtl' }}
                     />
                     <span className="text-[10px] font-bold text-amber-400">h{harmonicNum}</span>
@@ -393,7 +390,7 @@ export const AcousticsLab: React.FC<AcousticsLabProps> = ({ language }) => {
         </div>
       </div>
 
-      {/* Section: Tuning Systems & Mathematical Ratios (12-TET vs Pythagorean vs Just vs Makam) */}
+      {/* Section: Tuning Systems */}
       <div className="bg-stone-900 p-6 rounded-2xl border border-stone-800 shadow-lg space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
@@ -449,6 +446,7 @@ export const AcousticsLab: React.FC<AcousticsLabProps> = ({ language }) => {
             </p>
             <button
               onClick={() => handlePlayTuningDemo('equal')}
+              disabled={isPlayingTuning}
               className="w-full py-2 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-semibold transition flex items-center justify-center gap-1.5"
             >
               <Play className="w-3 h-3 text-amber-400" />
@@ -469,6 +467,7 @@ export const AcousticsLab: React.FC<AcousticsLabProps> = ({ language }) => {
             </p>
             <button
               onClick={() => handlePlayTuningDemo('pure')}
+              disabled={isPlayingTuning}
               className="w-full py-2 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-semibold transition flex items-center justify-center gap-1.5"
             >
               <Play className="w-3 h-3 text-emerald-400" />
@@ -476,21 +475,26 @@ export const AcousticsLab: React.FC<AcousticsLabProps> = ({ language }) => {
             </button>
           </div>
 
-          {/* Card 3: Acoustic Beating Test */}
-          <div className="p-4 rounded-xl bg-gradient-to-br from-amber-950/30 to-stone-950 border border-amber-500/30 space-y-2.5">
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-sm text-amber-300">Akustik Girişim & Vuruntu (Beating)</span>
-              <span className="text-xs text-amber-400 font-mono">Δf Beating</span>
+          {/* Card 3: Comparison Demo */}
+          <div className="p-4 rounded-xl bg-stone-950 border border-stone-800 space-y-2.5 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-sm text-stone-100">Akustik Vuru (Beating) Analizi</span>
+                <span className="text-xs font-mono text-sky-400 bg-sky-950/60 px-2 py-0.5 rounded border border-sky-500/30">
+                  A/B Test
+                </span>
+              </div>
+              <p className="text-xs text-stone-400 mt-2">
+                12-TET ile Saf Akort arasındaki frekans farkından oluşan akustik genlik dalgalanmasını (vuru/interferans) bizzat duyun.
+              </p>
             </div>
-            <p className="text-xs text-stone-300">
-              Eşit düzen sesi ile doğal saf sesi aynı anda çalarak aradaki frekans farkının yarattığı akustik dalgalanmayı dinleyin!
-            </p>
             <button
               onClick={() => handlePlayTuningDemo('both')}
-              className="w-full py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md shadow-amber-600/20"
+              disabled={isPlayingTuning}
+              className="w-full py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow-md"
             >
-              <Volume2 className="w-3.5 h-3.5" />
-              Girişim Dalgalarını Dinle (Compare Beats)
+              <Play className="w-3 h-3 fill-white" />
+              İki Sistemi Karşılaştırmalı Dinle
             </button>
           </div>
         </div>
