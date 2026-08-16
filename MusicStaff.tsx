@@ -1,5 +1,5 @@
 import React from 'react';
-import { ClefType } from '../types';
+import { ClefType } from './types';
 
 interface MusicStaffProps {
   clef?: ClefType;
