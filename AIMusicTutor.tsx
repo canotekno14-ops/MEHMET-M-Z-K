@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Language, AIMessage } from '../types';
+import { Language, AIMessage } from './types';
 import { TRANSLATIONS } from './translations';
 import ReactMarkdown from 'react-markdown';
 import { Send, Sparkles, Bot, User, Loader2, Music, BookOpen, Activity, Disc, RotateCcw } from 'lucide-react';
