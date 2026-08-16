@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Language, ClefType } from '../types';
-import { TRANSLATIONS } from '../i18n/translations';
+import { TRANSLATIONS } from './translations';
 import { INTERVALS, SCALES } from '../data/musicTheoryData';
 import { MusicStaff } from './MusicStaff';
 import { playPianoNote, noteToFrequency, playAcousticWave } from '../audio/synth';
