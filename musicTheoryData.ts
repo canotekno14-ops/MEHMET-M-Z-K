@@ -1,4 +1,4 @@
-import { NoteValueInfo, IntervalInfo, ScaleDefinition, ChordDefinition, ClefType } from '../types';
+import { NoteValueInfo, IntervalInfo, ScaleDefinition, ChordDefinition, ClefType } from './types';
 
 export const NOTE_VALUES: NoteValueInfo[] = [
   {
