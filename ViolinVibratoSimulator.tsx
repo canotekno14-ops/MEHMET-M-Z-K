@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { playViolinWithCustomVibrato } from '../audio/synth';
+import { playViolinWithCustomVibrato } from './audio/synth';
 import {
   Play,
   Square,
