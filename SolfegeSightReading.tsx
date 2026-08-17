@@ -3,7 +3,7 @@ import { Language, ClefType } from './types';
 import { TRANSLATIONS } from './translations';
 import { INTERVALS, SCALES } from './data/musicTheoryData';
 import { MusicStaff } from './MusicStaff';
-import { playPianoNote, noteToFrequency, playAcousticWave } from '../audio/synth';
+import { playPianoNote, noteToFrequency, playAcousticWave } from './audio/synth';
 import confetti from 'canvas-confetti';
 import { Trophy, Flame, Play, Volume2, Sparkles, HelpCircle, Check, X } from 'lucide-react';
 
