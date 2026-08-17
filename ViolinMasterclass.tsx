@@ -7,7 +7,7 @@ import {
   BOWING_TECHNIQUES,
   VIOLIN_FINGERBOARD_DATA,
 } from './data/violinData';
-import { playViolinNote, playAcousticWave } from '../audio/synth';
+import { playViolinNote, playAcousticWave } from './audio/synth';
 import { Activity, Volume2, Shield, Flame, BookOpen, Layers, Sparkles } from 'lucide-react';
 import { ViolinVibratoSimulator } from './ViolinVibratoSimulator';
 
