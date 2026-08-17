@@ -3,7 +3,7 @@ import { Language, PianoKeyData } from './types';
 import { TRANSLATIONS } from './translations';
 import { generate88Keys, PIANO_PEDALS, PIANO_ANATOMY, HANON_EXERCISES } from './data/pianoData';
 import { CHORDS } from './data/musicTheoryData';
-import { playPianoNote, noteToFrequency } from '../audio/synth';
+import { playPianoNote, noteToFrequency } from './audio/synth';
 import { Disc, Volume2, Sparkles, Layers, Shield } from 'lucide-react';
 
 interface PianoMasterclassProps {
