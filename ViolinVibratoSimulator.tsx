@@ -5,19 +5,44 @@ import {
   Square,
   Activity,
   Sliders,
-  Volume2,
   Sparkles,
   Info,
-  Layers,
-  Flame,
 } from 'lucide-react';
 
 export type VibratoType = 'arm' | 'wrist' | 'finger';
 
+const VIBRATO_TYPES = [
+  {
+    id: 'wrist' as const,
+    title: '1. Bilek Vibratosu (Wrist Vibrato)',
+    desc: 'El ayasının bilek ekseninde esnek salınımı. Parlak, zarif ve lirik ton (Kreisler & Heifetz ekolü).',
+    speed: 5.5,
+  },
+  {
+    id: 'arm' as const,
+    title: '2. Kol Vibratosu (Arm Vibrato)',
+    desc: 'Tüm ön kolun dirsekten ileri-geri salınımı. Güçlü, geniş ve dramatik ton (Oistrakh & Perlman ekolü).',
+    speed: 4.8,
+  },
+  {
+    id: 'finger' as const,
+    title: '3. Parmak Vibratosu (Finger Vibrato)',
+    desc: 'Yalnızca parmak eklemlerinin mikro-bükülüşü. Yüksek 5-7. pozisyonlarda dar ve hassas intonasyon.',
+    speed: 6.2,
+  },
+] as const;
+
+const STRING_NOTES = [
+  { name: 'La 4 (A4 - 440 Hz)', freq: 440 },
+  { name: 'Mi 5 (E5 - 659 Hz)', freq: 659.25 },
+  { name: 'Re 4 (D4 - 293 Hz)', freq: 293.66 },
+  { name: 'Sol 3 (G3 - 196 Hz)', freq: 196.0 },
+] as const;
+
 export const ViolinVibratoSimulator: React.FC = () => {
   const [vibratoType, setVibratoType] = useState<VibratoType>('wrist');
-  const [vibratoSpeedHz, setVibratoSpeedHz] = useState<number>(5.5); // Classical standard ~5.5 Hz
-  const [vibratoCents, setVibratoCents] = useState<number>(25); // ~±25 Cents
+  const [vibratoSpeedHz, setVibratoSpeedHz] = useState<number>(5.5);
+  const [vibratoCents, setVibratoCents] = useState<number>(25);
   const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
   const [selectedStringNote, setSelectedStringNote] = useState<{ name: string; freq: number }>({
     name: 'La 4 (A4 - 440 Hz)',
@@ -28,7 +53,6 @@ export const ViolinVibratoSimulator: React.FC = () => {
   const animFrameRef = useRef<number | null>(null);
   const stopAudioRef = useRef<(() => void) | null>(null);
 
-  // Audio Playback with matched LFO rate and depth
   const handleTogglePlayAudio = () => {
     if (isPlayingAudio) {
       if (stopAudioRef.current) stopAudioRef.current();
@@ -57,7 +81,6 @@ export const ViolinVibratoSimulator: React.FC = () => {
     };
   }, []);
 
-  // 60 FPS Canvas Render Loop for Finger Anatomy & Vibrato Motion
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -74,11 +97,10 @@ export const ViolinVibratoSimulator: React.FC = () => {
       const height = canvas.height;
       ctx.clearRect(0, 0, width, height);
 
-      // 1. Draw Fingerboard Cross-section & String
+      // Fingerboard & String
       const fbTopY = height - 60;
       const stringY = fbTopY - 4;
 
-      // Fingerboard Ebony Wood
       const fbGrad = ctx.createLinearGradient(0, fbTopY, 0, height);
       fbGrad.addColorStop(0, '#1c1917');
       fbGrad.addColorStop(0.3, '#292524');
@@ -86,12 +108,10 @@ export const ViolinVibratoSimulator: React.FC = () => {
       ctx.fillStyle = fbGrad;
       ctx.fillRect(20, fbTopY, width - 40, 50);
 
-      // Fingerboard Nut/Edge highlight
       ctx.strokeStyle = '#44403c';
       ctx.lineWidth = 1.5;
       ctx.strokeRect(20, fbTopY, width - 40, 50);
 
-      // Silver Wound Violin String (A4 String)
       ctx.strokeStyle = '#e7e5e4';
       ctx.lineWidth = 3.5;
       ctx.beginPath();
@@ -99,17 +119,14 @@ export const ViolinVibratoSimulator: React.FC = () => {
       ctx.lineTo(width - 20, stringY);
       ctx.stroke();
 
-      // String label
       ctx.fillStyle = '#a8a29e';
       ctx.font = '10px monospace';
       ctx.fillText('A4 Teli (Keman Tuşesi)', 30, fbTopY + 25);
 
-      // 2. Compute Vibrato Kinematics & Oscillation
-      // Oscillation phase: sin(2π * f * t)
+      // Vibrato Kinematics
       const phase = Math.sin(2 * Math.PI * vibratoSpeedHz * elapsedSec);
-      const ampNormalized = (vibratoCents / 40); // 0.25 to 1.0
+      const ampNormalized = vibratoCents / 40;
 
-      // Base anchor coordinates
       const contactBaseX = width / 2;
       const contactBaseY = stringY;
 
@@ -119,62 +136,52 @@ export const ViolinVibratoSimulator: React.FC = () => {
       let armOffsetDeltaX = 0;
 
       if (vibratoType === 'finger') {
-        // Finger Vibrato: High tip rolling, minimal wrist translation
         fingerRollX = phase * 9 * ampNormalized;
         fingerAngleOffset = phase * 0.18 * ampNormalized;
         jointFlexOffset = -phase * 6 * ampNormalized;
         armOffsetDeltaX = 0;
       } else if (vibratoType === 'wrist') {
-        // Wrist Vibrato: Moderate roll, strong wrist hinge motion
         fingerRollX = phase * 14 * ampNormalized;
         fingerAngleOffset = phase * 0.28 * ampNormalized;
         jointFlexOffset = -phase * 10 * ampNormalized;
         armOffsetDeltaX = phase * 8 * ampNormalized;
       } else {
-        // Arm Vibrato: Wide uniform displacement from forearm
         fingerRollX = phase * 18 * ampNormalized;
         fingerAngleOffset = phase * 0.32 * ampNormalized;
         jointFlexOffset = -phase * 12 * ampNormalized;
         armOffsetDeltaX = phase * 22 * ampNormalized;
       }
 
-      // Contact Point (Fingertip on String)
       const tipX = contactBaseX + fingerRollX;
       const tipY = contactBaseY;
 
-      // 3. Draw Contact Flesh Deformation Pad (Fingertip pad rolling flat to sharp)
+      // Contact Cushion Rolling Pad
       ctx.save();
       ctx.shadowColor = '#f59e0b';
       ctx.shadowBlur = 12;
       ctx.fillStyle = '#f59e0b';
       ctx.beginPath();
-      // Ellipse deformation during rolling
       ctx.ellipse(tipX, tipY, 11 + Math.abs(phase) * 2, 7, fingerAngleOffset * 0.5, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
 
-      // 4. Kinetic Finger Bones & Joints Anatomy
-      // DIP Joint (Distal Interphalangeal Joint)
+      // Finger Anatomy Vectors
       const dipX = tipX - 18 + fingerRollX * 0.3;
       const dipY = tipY - 38 + jointFlexOffset;
 
-      // PIP Joint (Proximal Interphalangeal Joint)
       const pipX = dipX - 42 + armOffsetDeltaX * 0.5;
       const pipY = dipY - 45 - jointFlexOffset * 0.6;
 
-      // MCP Knuckle (Metacarpophalangeal Joint / El Ayası Eklem Başı)
       const mcpX = pipX - 55 + armOffsetDeltaX;
       const mcpY = pipY - 35;
 
-      // Wrist Joint (Bilek Eklemi)
       const wristX = mcpX - 60 + armOffsetDeltaX * 1.2;
       const wristY = mcpY - 15;
 
-      // Forearm Bone (Ön Kol Kemik Vektörü)
       const armX = wristX - 70 + (vibratoType === 'arm' ? armOffsetDeltaX * 1.5 : 0);
       const armY = wristY + 10;
 
-      // Draw Flesh Contours
+      // Flesh Contour
       ctx.strokeStyle = 'rgba(251, 191, 36, 0.25)';
       ctx.lineWidth = 26;
       ctx.lineCap = 'round';
@@ -188,7 +195,7 @@ export const ViolinVibratoSimulator: React.FC = () => {
       ctx.lineTo(tipX, tipY);
       ctx.stroke();
 
-      // Draw Inner Skeleton Bones (Phalanges)
+      // Phalanges Skeleton
       ctx.strokeStyle = '#f59e0b';
       ctx.lineWidth = 6;
       ctx.beginPath();
@@ -200,13 +207,13 @@ export const ViolinVibratoSimulator: React.FC = () => {
       ctx.lineTo(tipX, tipY);
       ctx.stroke();
 
-      // Draw Anatomical Joint Pivot Circles
+      // Anatomical Joint Points
       const joints = [
-        { x: tipX, y: tipY, label: 'Parmak Yastığı (Fleshy Pad)', r: 6, color: '#f59e0b' },
-        { x: dipX, y: dipY, label: 'DIP Eklemi (Uç Boğum)', r: 5.5, color: '#fbbf24' },
-        { x: pipX, y: pipY, label: 'PIP Eklemi (Orta Boğum)', r: 6.5, color: '#fbbf24' },
-        { x: mcpX, y: mcpY, label: 'MCP Eklemi (Ana Boğum)', r: 7.5, color: '#d97706' },
-        { x: wristX, y: wristY, label: 'Bilek Eklemi (Wrist Hinge)', r: 8.5, color: '#b45309' },
+        { x: tipX, y: tipY, r: 6, color: '#f59e0b' },
+        { x: dipX, y: dipY, r: 5.5, color: '#fbbf24' },
+        { x: pipX, y: pipY, r: 6.5, color: '#fbbf24' },
+        { x: mcpX, y: mcpY, r: 7.5, color: '#d97706' },
+        { x: wristX, y: wristY, r: 8.5, color: '#b45309' },
       ];
 
       joints.forEach((j) => {
@@ -220,11 +227,10 @@ export const ViolinVibratoSimulator: React.FC = () => {
         ctx.stroke();
       });
 
-      // 5. Dynamic Pitch Cent Indicator & Motion Vectors
+      // Waveform Display Box
       const currentCentsOffset = Math.round(phase * vibratoCents);
       const isPitchFlat = currentCentsOffset < 0;
 
-      // Oscillation Sine Waveform at top of canvas
       const waveBoxX = width - 170;
       const waveBoxY = 25;
       const waveBoxW = 150;
@@ -236,7 +242,6 @@ export const ViolinVibratoSimulator: React.FC = () => {
       ctx.lineWidth = 1;
       ctx.strokeRect(waveBoxX, waveBoxY, waveBoxW, waveBoxH);
 
-      // Zero pitch reference line
       ctx.strokeStyle = '#71717a';
       ctx.setLineDash([3, 3]);
       ctx.beginPath();
@@ -245,7 +250,6 @@ export const ViolinVibratoSimulator: React.FC = () => {
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // Draw real-time oscillating pitch wave trace
       ctx.strokeStyle = '#f59e0b';
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -258,7 +262,6 @@ export const ViolinVibratoSimulator: React.FC = () => {
       }
       ctx.stroke();
 
-      // Pitch readout badge
       ctx.fillStyle = isPitchFlat ? '#38bdf8' : '#fbbf24';
       ctx.font = 'bold 11px monospace';
       ctx.fillText(
@@ -271,7 +274,7 @@ export const ViolinVibratoSimulator: React.FC = () => {
       ctx.font = '9px monospace';
       ctx.fillText(`Frekans: ${(selectedStringNote.freq * Math.pow(2, currentCentsOffset / 1200)).toFixed(1)} Hz`, waveBoxX + 10, waveBoxY + 56);
 
-      // 6. Vector Arrows for Motion Direction
+      // Pitch Center Indicator
       ctx.strokeStyle = phase > 0 ? '#10b981' : '#f59e0b';
       ctx.lineWidth = 2.5;
       ctx.beginPath();
@@ -281,7 +284,6 @@ export const ViolinVibratoSimulator: React.FC = () => {
       ctx.lineTo(arrowEndX, contactBaseY + 20);
       ctx.stroke();
 
-      // Center reference marker
       ctx.fillStyle = '#ef4444';
       ctx.beginPath();
       ctx.arc(contactBaseX, contactBaseY + 20, 3, 0, Math.PI * 2);
@@ -303,7 +305,6 @@ export const ViolinVibratoSimulator: React.FC = () => {
 
   return (
     <div className="bg-stone-900 p-6 md:p-8 rounded-2xl border border-stone-800 shadow-xl space-y-6 animate-in fade-in">
-      {/* Title & Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-stone-800">
         <div>
           <div className="flex items-center gap-2 text-amber-500 text-xs font-bold uppercase tracking-wider mb-1">
@@ -318,7 +319,6 @@ export const ViolinVibratoSimulator: React.FC = () => {
           </p>
         </div>
 
-        {/* Live Audio Playback Button */}
         <button
           onClick={handleTogglePlayAudio}
           className={`px-5 py-3 rounded-xl font-bold text-xs flex items-center gap-2 transition shadow-lg ${
@@ -341,28 +341,8 @@ export const ViolinVibratoSimulator: React.FC = () => {
         </button>
       </div>
 
-      {/* 3 Vibrato School Type Selectors */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        {[
-          {
-            id: 'wrist' as const,
-            title: '1. Bilek Vibratosu (Wrist Vibrato)',
-            desc: 'El ayasının bilek ekseninde esnek salınımı. Parlak, zarif ve lirik ton (Kreisler & Heifetz ekolü).',
-            speed: 5.5,
-          },
-          {
-            id: 'arm' as const,
-            title: '2. Kol Vibratosu (Arm Vibrato)',
-            desc: 'Tüm ön kolun dirsekten ileri-geri salınımı. Güçlü, geniş ve dramatik ton (Oistrakh & Perlman ekolü).',
-            speed: 4.8,
-          },
-          {
-            id: 'finger' as const,
-            title: '3. Parmak Vibratosu (Finger Vibrato)',
-            desc: 'Yalnızca parmak eklemlerinin mikro-bükülüşü. Yüksek 5-7. pozisyonlarda dar ve hassas intonasyon.',
-            speed: 6.2,
-          },
-        ].map((type) => {
+        {VIBRATO_TYPES.map((type) => {
           const isActive = vibratoType === type.id;
           return (
             <button
@@ -387,9 +367,7 @@ export const ViolinVibratoSimulator: React.FC = () => {
         })}
       </div>
 
-      {/* Main Interactive Stage & Sliders */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-        {/* Canvas Visualizer Screen */}
         <div className="lg:col-span-8 bg-stone-950 p-4 rounded-2xl border border-stone-800 shadow-inner flex flex-col items-center justify-center">
           <canvas
             ref={canvasRef}
@@ -397,21 +375,19 @@ export const ViolinVibratoSimulator: React.FC = () => {
             height={320}
             className="w-full max-w-[580px] h-auto rounded-xl"
           />
-          <div className="w-full flex items-center justify-between px-3 pt-3 text-[11px] text-stone-400 border-t border-stone-850">
+          <div className="w-full flex items-center justify-between px-3 pt-3 text-[11px] text-stone-400 border-t border-stone-855">
             <span>🔴 Kırmızı Nokta: Sabit Akort Merkezi ($f_0$)</span>
             <span>🟡 Sarı Alan: Yuvarlanan Parmak Ucu Yastığı</span>
             <span className="font-mono text-amber-400">FPS: 60 (Gerçek Zamanlı Fizik)</span>
           </div>
         </div>
 
-        {/* Kinetic Controls & Physics Parameters */}
         <div className="lg:col-span-4 space-y-4 bg-stone-950 p-5 rounded-2xl border border-stone-800 text-xs">
           <div className="flex items-center gap-2 text-stone-200 font-bold border-b border-stone-800 pb-2">
             <Sliders className="w-4 h-4 text-amber-400" />
             <span>Fiziksel Parametre Ayarları</span>
           </div>
 
-          {/* Vibrato Speed Slider */}
           <div className="space-y-1.5">
             <div className="flex justify-between font-semibold text-stone-300">
               <span>Vibrato Hızı (Salınım/Sn):</span>
@@ -433,7 +409,6 @@ export const ViolinVibratoSimulator: React.FC = () => {
             </div>
           </div>
 
-          {/* Vibrato Depth (Cents) Slider */}
           <div className="space-y-1.5">
             <div className="flex justify-between font-semibold text-stone-300">
               <span>Salınım Genliği (Cent Sapması):</span>
@@ -455,16 +430,10 @@ export const ViolinVibratoSimulator: React.FC = () => {
             </div>
           </div>
 
-          {/* Target Note Pitch Selector */}
           <div className="pt-2 border-t border-stone-800 space-y-2">
             <span className="font-semibold text-stone-300 block">Telin Referans Notası:</span>
             <div className="grid grid-cols-2 gap-2">
-              {[
-                { name: 'La 4 (A4 - 440 Hz)', freq: 440 },
-                { name: 'Mi 5 (E5 - 659 Hz)', freq: 659.25 },
-                { name: 'Re 4 (D4 - 293 Hz)', freq: 293.66 },
-                { name: 'Sol 3 (G3 - 196 Hz)', freq: 196.0 },
-              ].map((n) => (
+              {STRING_NOTES.map((n) => (
                 <button
                   key={n.name}
                   onClick={() => setSelectedStringNote(n)}
@@ -482,7 +451,6 @@ export const ViolinVibratoSimulator: React.FC = () => {
         </div>
       </div>
 
-      {/* Pedagogical Galamian & Flesch Masterclass Notes */}
       <div className="p-5 bg-stone-950 rounded-xl border border-stone-800 space-y-3 text-xs text-stone-300">
         <div className="flex items-center gap-2 font-bold text-amber-400">
           <Info className="w-4 h-4" />
@@ -491,7 +459,7 @@ export const ViolinVibratoSimulator: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-[11px] leading-relaxed text-stone-400">
           <div className="p-3 bg-stone-900/60 rounded-lg border border-stone-800">
             <span className="font-bold text-stone-200 block mb-1">1. Salınım Yönü Kuralı:</span>
-            Vibrato hareketi, parmağın tuşe üzerindeki doğru notasından **asla yukarıya (tize) taşmamalıdır**. Parmak geriye (pese) doğru yuvarlanır ve yeniden gerçek notanın merkezine döner. Kulak tizi algıladığı için yukarı taşan salınım detone duyulur.
+            Vibrato hareketi, parmağın tuşe üzerindeki doğru notasından <strong>asla yukarıya (tize) taşmamalıdır</strong>. Parmak geriye (pese) doğru yuvarlanır ve yeniden gerçek notanın merkezine döner.
           </div>
           <div className="p-3 bg-stone-900/60 rounded-lg border border-stone-800">
             <span className="font-bold text-stone-200 block mb-1">2. Başparmak ve El Ayası Serbestliği:</span>
