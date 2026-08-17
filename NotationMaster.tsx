@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Language, ClefType } from './types';
 import { TRANSLATIONS } from './translations';
-import { NOTE_VALUES, TIME_SIGNATURES } from '../data/musicTheoryData';
+import { NOTE_VALUES, TIME_SIGNATURES } from './data/musicTheoryData';
 import { MusicStaff } from './MusicStaff';
 import { playMetronomeClick, playPianoNote } from '../audio/synth';
 import { Clock, Music, CheckCircle2, RotateCcw } from 'lucide-react';
