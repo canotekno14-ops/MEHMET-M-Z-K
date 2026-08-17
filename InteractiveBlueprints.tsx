@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Language, ClefType } from './types';
 import { TRANSLATIONS } from './translations';
-import { playPianoNote, playViolinNote, noteToFrequency } from '../audio/synth';
+import { playPianoNote, playViolinNote, noteToFrequency } from './audio/synth';
 import confetti from 'canvas-confetti';
 import {
   Sparkles,
